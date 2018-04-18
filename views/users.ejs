@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>nihao</title>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+</head>
+<body>
+<p>Welcome to nodejs</p>
+<ul>
+    <% users.forEach(i => { %>
+        <li><%= `${i.firstName} ${i.lastName} || ${i.age}` %></li>
+    <% }) %>
+</ul>
+</body>
+</html>
