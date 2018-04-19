@@ -1,17 +1,29 @@
-const User = require('../models/in_memo/user');
+const User = require('../models/mongoose/user');
 
-function getAllUsers() {
-  const user = User.list();
+async function getAllUsers() {
+  const user = await User.list();
   return user;
 }
 
-function addNewUser(firstName, lastName, age) {
-  const user = User.insert(firstName, lastName, age);
+async function addNewUser(user) {
+  const created = await User.insert(user);
+  return created;
+}
+
+async function getOneById(userId) {
+  const user = await User.getOneById(userId);
+  return user;
+}
+
+async function getOneByName(name) {
+  const user = await User.getOneByName(name);
   return user;
 }
 
 
 module.exports = {
   getAllUsers,
-  addNewUser
+  addNewUser,
+  getOneById,
+  getOneByName,
 };

@@ -5,10 +5,10 @@
     <link rel='stylesheet' href='/stylesheets/style.css'/>
 </head>
 <body>
-<p>Welcome to nodejs</p>
+<p>用户列表:</p>
 <ul>
     <% users.forEach(i => { %>
-        <li><%= `${i.firstName} ${i.lastName} || ${i.age}` %></li>
+        <li><%= `${i.name} ${i.age}` %></li>
     <% }) %>
 </ul>
 </body>
