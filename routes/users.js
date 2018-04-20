@@ -8,7 +8,6 @@ const HTTPReqParamError = require('../errors/http_request_param');
 /* GET users listing. */
 router.get('/', (req, res, next) => {
   (async () => {
-    throw new HTTPReqParamError('page','请指定页码','no such page');
     const users = await UserService.getAllUsers();
     res.locals.users = users;
     //return users;

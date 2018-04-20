@@ -22,12 +22,12 @@ async function getOneById(userId) {
 }
 
 async function getOneByName(name) {
-  if(name.length >5){
-    throw new HttpReqParamError(
-        'name','name长度小于5',
-        'name length less than 5'
-    );
-  }
+  // if(name.length >5){
+  //   throw new HttpReqParamError(
+  //       'name','name长度小于5',
+  //       'name length less than 5'
+  //   );
+  // }
   const user = await User.getOneByName(name);
   return user;
 }
