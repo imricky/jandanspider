@@ -6,10 +6,6 @@ const UserService = require('../services/user_service')
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
-  // const users = UserService.getAllUsers();
-  // //res.send('users');
-  // //res.json({name:'ricky',age:19})
-  // res.render('users', { users:users });
   (async () => {
     const users = await UserService.getAllUsers();
     return users;
@@ -49,11 +45,13 @@ router.get('/:name', (req, res, next) => {
     };
   })()
       .then((r) => {
-        console.log(r.user.age);
+        //console.log(r.user.age);
         res.send(r);
       })
       .catch((e) => {
-        next(e);
+        console.log(e)
+        res.send(e)
+        //next(e);
       });
 });
 
