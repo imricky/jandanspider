@@ -7,7 +7,12 @@ async function getAllUsers() {
 }
 
 async function addNewUser(user) {
+
+
   const created = await User.insert(user);
+  // if(!created){
+  //   throw new Error();
+  // }
   return created;
 }
 

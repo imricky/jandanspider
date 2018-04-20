@@ -2,18 +2,22 @@ const express = require('express');
 
 const router = express.Router();
 
-const UserService = require('../services/user_service')
+const UserService = require('../services/user_service');
+const HTTPReqParamError = require('../errors/http_request_param');
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
   (async () => {
+    throw new HTTPReqParamError('page','请指定页码','no such page');
     const users = await UserService.getAllUsers();
-    return users;
+    res.locals.users = users;
+    //return users;
   })()
       .then(r => {
-        res.render('users', {users: r});
+        res.render('users');
       })
       .catch(e => {
+        next(e)
       });
 });
 
@@ -21,10 +25,11 @@ router.post('/', (req, res, next) => {
 
   (async () => {
     const {name, age} = req.body;
-    const result = await UserService.addNewUser({
-      name,
-      age
-    });
+
+      const result = await UserService.addNewUser({
+        name,
+        age
+      });
     return result;
   })()
       .then(r => {
@@ -33,6 +38,8 @@ router.post('/', (req, res, next) => {
         res.json(r);
       })
       .catch(e => {
+        //throw new Error(e);
+        next(e)
       });
 });
 
@@ -49,9 +56,7 @@ router.get('/:name', (req, res, next) => {
         res.send(r);
       })
       .catch((e) => {
-        console.log(e)
-        res.send(e)
-        //next(e);
+        next(e);
       });
 });
 

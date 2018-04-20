@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 const {Schema} = mongoose;
+
+
+
 const userSchema = new Schema({
   name: {type: String, requied: true, index: 1},
   age: {type: Number, min: 0, max: 120}
@@ -7,7 +10,9 @@ const userSchema = new Schema({
 
 const UserModel = mongoose.model('user', userSchema);
 
+
 async function insert(user) {
+
   const created = await UserModel.create(user);
   return created;
 }
