@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
+const logger = require('../../utils/loggers/logger');
+
 
 
 const userSchema = new Schema({
@@ -31,6 +33,7 @@ async function list(params) {
   const match = {};
   const flow = UserModel.find(match);
   const users = await flow.exec();
+  logger.info('list all users');
   return users;
 }
 
@@ -40,6 +43,6 @@ module.exports = {
   getOneById,
   getOneByName,
   list,
-}
+};
 
 

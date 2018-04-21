@@ -37,7 +37,7 @@ router.post('/', (req, res, next) => {
         res.json(r);
       })
       .catch(e => {
-        //throw new Error(e);
+        //throw new Error(e); //这里好像不能直接抛出错误，必须next到下一个才能捕获
         next(e)
       });
 });
