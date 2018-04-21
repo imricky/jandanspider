@@ -2,8 +2,8 @@ const express = require('express');
 
 const router = express.Router();
 
-const UserService = require('../services/user_service');
-const HTTPReqParamError = require('../errors/http_request_param');
+const UserService = require('../../services/user_service');
+const HTTPReqParamError = require('../../errors/http_request_param');
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
