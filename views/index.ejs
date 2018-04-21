@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+    <link rel='stylesheet' href='./stylesheets/style.css'/>
+    <script src="./javascripts/jquery.js"></script>
+
+</head>
+<body>
+<h1><%= title %></h1>
+<p>Welcome to <%= title %></p>
+
+<button id="clickforlogin">点击登录</button>
+
+<script>
+  $('#clickforlogin').click(() => {
+    // window.location.href="输入另一个页面的链接"
+    $(location).prop('href', './login');
+  })
+</script>
+</body>
 </html>
