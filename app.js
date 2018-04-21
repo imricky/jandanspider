@@ -9,6 +9,9 @@ const logger = require('./utils/loggers/logger');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/api/users');
 
+const loginRouter = require('./routes/api/login');
+
+
 const app = express();
 
 // view engine setup
@@ -23,6 +26,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
+
+app.use('/api/login', loginRouter);
+
 
 //处理http请求相关的错误
 app.use(errHandler());
