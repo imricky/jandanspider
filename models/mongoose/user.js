@@ -7,7 +7,8 @@ const logger = require('../../utils/loggers/logger');
 
 const userSchema = new Schema({
   name: {type: String, requied: true, index: 1},
-  age: {type: Number, min: 0, max: 120}
+  age: {type: Number, min: 0, max: 120},
+  password: {type:String,requied: true}
 });
 
 const UserModel = mongoose.model('user', userSchema);
