@@ -22,6 +22,11 @@ router.get('/login', (req, res, next) => {
   res.render('login', {title: 'Express'});
 });
 
+router.get('/register', (req, res, next) => {
+  logger.info(`url:${req.originalUrl} || ${req.ip}`);
+  res.render('register', {title: '注册页面'});
+});
+
 
 
 module.exports = router;
