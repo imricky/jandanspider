@@ -26,10 +26,10 @@ router.post('/', (req, res, next) => {
     const resUsername = userRes.name;
     const resPassword = userRes.password;
 
-    //const cipher = await pbkdf2Async(password,'ashdjkaqkjwjehasd',10000,512,'sha256');
-    userPwd = crypto.createHash('md5').update(password).digest('hex');
+    const cipher = await pbkdf2Async(password,'ashdjkaqkjwjehasd',10000,512,'sha256');
+    //userPwd = crypto.createHash('md5').update(password).digest('hex');
     //用户名和数据库里取出的进行比较
-    if(resUsername !== name || resPassword !== userPwd){
+    if(resUsername !== name || resPassword !== cipher.toString('hex')){
       logger.error('用户名或密码错误');
       res.send({login:false})
     }
