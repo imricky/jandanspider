@@ -10,6 +10,10 @@ const User = require('../../models/mongoose/user');
 const bluebird = require('bluebird');
 const pbkdf2Async = bluebird.promisify(crypto.pbkdf2);
 
+const session = require('express-session');
+
+
+
 
 //jwt测试
 router.post('/', (req, res, next) => {
@@ -34,17 +38,22 @@ router.post('/', (req, res, next) => {
       res.send({login:false})
     }
 
+    req.session.loginUser = resUsername;
     // res.cookie('islogin', resUsername, { maxAge: 60000 });
     // res.locals.username = resUsername;
     // req.session.username = res.locals.username;
     // console.log(req.session.username);
     //res.redirect('/');
-    //return;
+    //res.set('set-Cookie', `username=${name},expiredAt=${Date.now().valueOf() + 20*60*1000}`);
+    logger.info('登录成功');
+    //res.redirect('/');
     res.send({login:true})
   })()
     .then(r => {
     })
     .catch(e => {
+      logger.error(e);
+      next(e)
     });
 
   // const username=req.query.username;

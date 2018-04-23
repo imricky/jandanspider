@@ -2,6 +2,7 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
 // const logger = require('morgan');
 require('./services/mongodb_connection');
 const errHandler = require('./middlewares/http_error_handle');
@@ -23,7 +24,18 @@ app.set('view engine', 'ejs');
 // app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
-app.use(cookieParser());
+
+//app.use(cookieParser());
+app.use(session({
+  //name: 'ricky', //设置 cookie 中，保存 session 的字段名称，默认为 connect.sid
+  secret: 'chyingp',  // 用来对session id相关的cookie进行签名
+  //store: new FileStore(),  // 本地存储session（文本文件，也可以选择其他store，比如redis的）
+  saveUninitialized: false,  // 是否自动保存未初始化的会话，建议false
+  resave: false,  // 是否每次都重新保存会话，建议false
+  cookie: {
+    maxAge: 50 * 1000  // 有效期，单位是毫秒/这个比较重要
+  }
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);

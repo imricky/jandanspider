@@ -14,12 +14,28 @@ const pbkdf2Async = bluebird.promisify(crypto.pbkdf2);
 /* GET home page. */
 router.get('/', (req, res, next) => {
   logger.info(`url:${req.originalUrl} || ${req.ip}`);
+  // if(!req.cookies.username){
+  //   res.redirect('/login');
+  //   return;
+  // }
   res.render('index', {title: 'Ricky的博客'});
 });
 
 router.get('/login', (req, res, next) => {
+  if(req.session.loginUser){
+    const user=req.session.loginUser;
+    //const name=user.name;
+    //console.log(req.session);
+    // res.send('你好'+user+'，欢迎来到我的家园。');
+    res.redirect('/');
+
+  }else{
+    //res.send('你还没有登录，先登录下再试试！');
+    res.render('login', {title: 'Express'});
+  }
+
   logger.info(`url:${req.originalUrl} || ${req.ip}`);
-  res.render('login', {title: 'Express'});
+  //res.render('login', {title: 'Express'});
 });
 
 router.get('/register', (req, res, next) => {
