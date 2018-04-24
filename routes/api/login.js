@@ -39,15 +39,15 @@ router.post('/', (req, res, next) => {
     }
 
     req.session.loginUser = resUsername;
+    //console.log(req.sessionID);
+    //console.log(req.session.cookie);
     // res.cookie('islogin', resUsername, { maxAge: 60000 });
     // res.locals.username = resUsername;
     // req.session.username = res.locals.username;
     // console.log(req.session.username);
-    //res.redirect('/');
-    //res.set('set-Cookie', `username=${name},expiredAt=${Date.now().valueOf() + 20*60*1000}`);
     logger.info('登录成功');
     //res.redirect('/');
-    res.send({login:true})
+    res.send({login:true});
   })()
     .then(r => {
     })

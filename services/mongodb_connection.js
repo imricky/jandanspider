@@ -11,4 +11,8 @@ db.on('open',()=>{
   //console.log('open!! ')
 });
 
+db.on("error", function (error) {
+  logger.error('数据库连接失败');
+});
+
 module.exports = db;

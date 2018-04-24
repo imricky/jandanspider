@@ -35,9 +35,10 @@
         function(data){
           console.log(data); //  2pm
           if(data.login === false){
-            alert('用户名或密码错误!')
+            alert('用户名或密码错误!');
           }else {
-            alert('登录成功!')
+            alert('登录成功!');
+            window.location.href = "/";  //实现返回结果后实现跳转
           }
         });
   });

@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const MongoStore = require('connect-mongo')(session); //保存session到MongoDB
 // const logger = require('morgan');
 require('./services/mongodb_connection');
 const errHandler = require('./middlewares/http_error_handle');
@@ -30,10 +31,18 @@ app.use(session({
   //name: 'ricky', //设置 cookie 中，保存 session 的字段名称，默认为 connect.sid
   secret: 'chyingp',  // 用来对session id相关的cookie进行签名
   //store: new FileStore(),  // 本地存储session（文本文件，也可以选择其他store，比如redis的）
+  store: new MongoStore({
+    url: 'mongodb://localhost:27017/myblog',
+    //touchAfter: 24 * 3600 // time period in seconds
+    //ttl: 14 * 24 * 60 * 60 // = 14 days. Default
+    //ttl: 10  如果session cookie 有过期时间，mongoStore会使用这个，否则会自己创建一个
+    //Each time an user interacts with the server, its session expiration date is refreshed.
+  }),
+
   saveUninitialized: false,  // 是否自动保存未初始化的会话，建议false
   resave: false,  // 是否每次都重新保存会话，建议false
   cookie: {
-    maxAge: 50 * 1000  // 有效期，单位是毫秒/这个比较重要
+    maxAge: 10 * 1000  // 有效期，单位是毫秒/这个比较重要
   }
 }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -43,7 +52,6 @@ app.use('/api/users', usersRouter);
 
 app.use('/api/login', loginRouter);
 app.use('/api/register', registerRouter);
-
 
 
 //处理http请求相关的错误

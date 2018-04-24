@@ -24,10 +24,9 @@ router.get('/', (req, res, next) => {
 router.get('/login', (req, res, next) => {
   if(req.session.loginUser){
     const user=req.session.loginUser;
-    //const name=user.name;
     //console.log(req.session);
-    // res.send('你好'+user+'，欢迎来到我的家园。');
-    res.redirect('/');
+    res.send('你好'+user+'，欢迎来到我的家园。');
+    //res.redirect('/');
 
   }else{
     //res.send('你还没有登录，先登录下再试试！');
