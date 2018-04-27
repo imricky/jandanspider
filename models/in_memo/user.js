@@ -29,6 +29,13 @@ class User {
     return User.users;
   }
 
+  // static get['UUID'](){
+  //   return `www.qq.com`;
+  // }
+  //这样就可以直接用User.UUID了，因为class不支持属性，只支持方法
+
+  //static 方法可以直接使用，不用实例化[即不用先new一个出来]
+
 
 }
 

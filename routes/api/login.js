@@ -45,6 +45,7 @@ router.post('/', (req, res, next) => {
     // res.locals.username = resUsername;
     // req.session.username = res.locals.username;
     // console.log(req.session.username);
+    //locals对象用于将数据传递至所渲染的模板中。
     logger.info('登录成功');
     //res.redirect('/');
     res.send({login:true});

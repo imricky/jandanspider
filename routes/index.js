@@ -33,7 +33,7 @@ router.get('/login', (req, res, next) => {
     res.render('login', {title: 'Express'});
   }
 
-  logger.info(`url:${req.originalUrl} || ${req.ip}`);
+  logger.info(`url:${req.baseUrl} || ${req.ip}`);
   //res.render('login', {title: 'Express'});
 });
 
