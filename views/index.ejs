@@ -2,21 +2,96 @@
 <html>
 <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='./stylesheets/style.css'/>
+    <!--<link rel='stylesheet' href='./stylesheets/style.css'/>-->
+    <!--这里的路径不能加../public，因为指定了静态目录，所以直接像下面这样写就可以了-->
+    <link rel="stylesheet" type="text/css" href="./uikit/css/uikit.css"/>
+    <link rel="stylesheet" type="text/css" href="./uikit/css/components/notify.css"/>
     <script src="./javascripts/jquery.js"></script>
+    <script src="./uikit/js/uikit.js"></script>
+    <script src="./uikit/js/components/notify.js"></script>
 
 </head>
-<body>
-<h1><%= title %></h1>
-<p>Welcome to <%= title %></p>
+<body class="uk-height-1-1">
+<!--<h1><%= title %></h1>-->
+<!--<p>Welcome to <%= title %></p>-->
 
-<button id="clickforlogin">点击登录</button>
+<!--<button id="clickforlogin">点击登录</button>-->
+
+<!--<ul>-->
+    <!--<% users.forEach(i => { %>-->
+    <!--<li><%= `${i.name} ${i.age}` %></li>-->
+    <!--<% }) %>-->
+<!--</ul>-->
+
+<div class="uk-placeholder">...</div>
+
+<div class="uk-vertical-align uk-text-center uk-height-1-2">
+    <div class="uk-vertical-align-middle" style="width: 350px;">
+
+        <form class="uk-panel uk-panel-box uk-form">
+            <div class="uk-form-row">
+                <input class="uk-width-1-1 uk-form-large" type="text" placeholder="Username">
+            </div>
+            <div class="uk-form-row">
+                <input class="uk-width-1-1 uk-form-large" type="text" placeholder="Password">
+            </div>
+            <div class="uk-form-row">
+                <a class="uk-width-1-1 uk-button uk-button-primary uk-button-large" href="/login">Login</a>
+            </div>
+            <div class="uk-form-row uk-text-small">
+                <label class="uk-float-left"><input type="checkbox"> Remember Me</label>
+                <a class="uk-float-right uk-link uk-link-muted" href="#">Forgot Password?</a>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<button class="uk-button" type="button">My Button</button>
+
+<ul class="uk-list uk-list-striped uk-list-space">
+    <li>999</li>
+    <li>999</li>
+    <li>999</li>
+</ul>
+
+
+<ul class="uk-list uk-list-striped uk-list-space">
+    <% users.forEach((i) =>{ %>
+    <li><%= `${i.name} ${i.age}` %></li>
+    <% }) %>
+</ul>
+<!-- 这是开关抽屉式边栏的锚 -->
+<!--<a href="#my-id" data-uk-offcanvas>打开</a>-->
+
+<!-- 这是开关抽屉式边栏的按钮 -->
+<button class="uk-button" data-uk-offcanvas="{target:'#my-id'}">打开</button>
+
+<!-- 抽屉式边栏 -->
+<div id="my-id" class="uk-offcanvas">
+    <div class="uk-offcanvas-bar">testqweqweqwe</div>
+</div>
 
 <script>
   $('#clickforlogin').click(() => {
     // window.location.href="输入另一个页面的链接"
     $(location).prop('href', './login');
-  })
+  });
+
+  // $(".uk-uk-width-1-1 >.uk-button >.uk-button-primary >.uk-button-large").click(() => {
+  //   console.log(this)
+  //   console.log(123);
+  //   UIkit.notify("Message...");
+  // });
+
+  $(".uk-button").click(() => {
+    console.log('test1')
+    UIkit.notify("Message...");
+  });
+
+  $(".button").uk("button",()=>{
+    console.log('te')
+  });
 </script>
 </body>
 </html>
