@@ -7,13 +7,15 @@ const MongoStore = require('connect-mongo')(session); //保存session到MongoDB
 // const logger = require('morgan');
 require('./services/mongodb_connection');
 const errHandler = require('./middlewares/http_error_handle');
-const logger = require('./utils/loggers/logger');
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/api/users');
 
-const loginRouter = require('./routes/api/login');
+const logger = require('./utils/loggers/logger'); //日志相关
 
-const registerRouter = require('./routes/api/register');
+
+const indexRouter = require('./routes/index'); //主页面
+const usersRouter = require('./routes/api/users'); //用户管理页面
+const loginRouter = require('./routes/api/login'); //注册页面
+const registerRouter = require('./routes/api/register'); //登录页面
+const aboutRouter = require('./routes/about'); //关于页面
 
 
 const app = express();
@@ -53,6 +55,7 @@ app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/register', registerRouter);
 
+app.use('/about',aboutRouter);
 
 //处理http请求相关的错误
 app.use(errHandler());
@@ -65,7 +68,7 @@ app.use(errHandler());
 // error handler
 app.use((err, req, res, next) => {
   // set locals, only providing error in development
-  res.locals.message = err.message
+  res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
   logger.error(err.stack);
   //console.log('您访问的资源不存在!');
