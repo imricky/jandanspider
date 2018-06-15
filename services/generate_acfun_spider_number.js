@@ -11,6 +11,7 @@ const redis = new Redis();
   }
 })()
   .then(r => {
+    console.log('done')
   })
   .catch(e => {
   });
