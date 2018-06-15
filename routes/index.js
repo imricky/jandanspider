@@ -29,7 +29,7 @@ router.get('/', (req, res, next) => {
   }];
   //res.locals 可以传变量过去，pm2 start .bin/www --watch  一定要加watch 去监控文件的变动
   //res.locals.testu = users;
-  res.render('index', {title: 'Ricky的博客啊',users:users});
+  res.render('index', {title: '爬虫测试主页',users:users});
 });
 
 router.get('/login', (req, res, next) => {

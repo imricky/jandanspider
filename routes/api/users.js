@@ -33,7 +33,7 @@ router.post('/', (req, res, next) => {
   })()
       .then(r => {
         console.log(r);
-        console.log('插入成功!')
+        console.log('插入成功!');
         res.json(r);
       })
       .catch(e => {
