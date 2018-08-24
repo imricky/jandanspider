@@ -57,11 +57,6 @@ router.post('/', (req, res, next) => {
       next(e)
     });
 
-  // const username=req.query.username;
-  // const user = {username,expiredAt:Date.now().valueOf() + 20*60*1000};
-  // const token = JWT.sign(user, 'qweqwwweqweqwe');
-  // res.send(token);
-
 });
 router.post('/hello', (req, res, next) => {
   const auth = req.get('Authorization');

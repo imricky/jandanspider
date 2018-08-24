@@ -13,23 +13,17 @@ const pbkdf2Async = bluebird.promisify(crypto.pbkdf2);
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
-  logger.info(`url:${req.originalUrl} || ${req.ip}`);
-  let users = [{
-    name:'q',
-    age:1
-  },{
-    name:'w',
-    age:2
-  },{
-    name:'e',
-    age:3
-  },{
-    name:'r',
-    age:4
-  }];
+  // let reqInfo = {
+  //   url:req.originalUrl,
+  //   ip:req.ip,
+  //   path:req.path,
+  //   subdomains:req.subdomains
+  // }
+  logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || subdomains:${req.subdomains}`);
+  //logger.info(`reqInfo:${reqInfo}`);
   //res.locals 可以传变量过去，pm2 start .bin/www --watch  一定要加watch 去监控文件的变动
   //res.locals.testu = users;
-  res.render('index', {title: '爬虫测试主页',users:users});
+  res.render('index', {title: '主页'});
 });
 
 router.get('/login', (req, res, next) => {
