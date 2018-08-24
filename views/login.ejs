@@ -31,7 +31,7 @@
       alert('用户名或密码不能为空');
       return;
     }
-    $.post("/api/login", { "name": name,"password":password },
+    $.post("/api/login/newlogin", { "name": name,"password":password },
         function(data){
           console.log(data); //  2pm
           if(data.login === false){

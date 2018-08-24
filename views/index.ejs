@@ -1,19 +1,52 @@
 <%- include('header') %>
+<script src="./javascripts/md5.min.js"></script>
+</head>
+<body>
+<div class="uk-align-center">
 <form>
-
-    <div class="uk-margin">
+    <div class="uk-flex uk-flex-center">
         <div class="uk-inline">
             <span class="uk-form-icon" uk-icon="icon: user"></span>
-            <input class="uk-input" type="text">
+            <input class="uk-input login-name" type="text">
         </div>
     </div>
 
-    <div class="uk-margin">
+    <div class="uk-flex uk-flex-center">
         <div class="uk-inline">
             <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock"></span>
-            <input class="uk-input" type="text">
+            <input class="uk-input login-password" type="password">
         </div>
     </div>
-
 </form>
+    <div class="uk-flex uk-flex-center">
+        <button class="uk-button uk-button-default login-submit">登录</button>
+    </div>
+
+</div>
+
+<script>
+    $('.login-submit').click(() => {
+      const loginName = $('.login-name').val();
+      const loginPassword = $('.login-password').val();
+      //console.log(`${loginName} || ${loginPassword}`)
+      //前端进行md5加密之后再传给后端
+      let md5LoginPassword = md5(loginPassword);
+      $.ajax({
+        type: "POST",
+        url: '/api/login/newlogin',
+        data: {username:loginName,password:md5LoginPassword},
+        success: function (res,status,xhr) {
+          console.log(res);
+          if(res.data.login === false){
+
+          }
+        },
+        error:function (error) {
+          console.log(`登录失败，失败原因：${error.err}`);
+        }
+        //dataType: dataType
+      });
+
+    })
+</script>
 <%- include('footer') %>
