@@ -12,7 +12,49 @@ const pbkdf2Async = bluebird.promisify(crypto.pbkdf2);
 
 const session = require('express-session');
 
+router.post('/newlogin',(req,res,next) => {
+  (async () => {
+    const {username,password} = req.body;
+    const userRes = await User.getOneByName(username);
+    if(userRes === null || userRes === ""){
+      logger.error(`用户名或密码错误`);
+      logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || subdomains:${req.subdomains}`);
+      res.json({
+        status:false,
+        login: false,
+        err:"用户不存在或密码错误"
+      });
+    }
+    const resUsername = userRes.name;
+    const resPassword = userRes.password;
+    //比较密码是否正确,后端传过来的是md5 加密过的
+    const cipher = await pbkdf2Async(password,'ashdjkaqkjwjehasd',10000,512,'sha256');
+    if(resUsername !== username || resPassword !== cipher.toString('hex')){
+      logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || subdomains:${req.subdomains}`);
+      logger.error('用户名或密码错误');
+      res.json({
+        status:false,
+        login: false,
+        err:"用户不存在或密码错误"
+      });
 
+      req.session.loginUser = resUsername;
+      logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || subdomains:${req.subdomains}`);
+      logger.info('登录成功');
+      res.json({
+        status:true,
+        login: true
+        //err:"用户不存在或密码错误"
+      });
+    }
+  })()
+    .then(r => {
+    })
+    .catch(e => {
+      logger.error(e);
+      next(e);
+    });
+})
 
 
 //jwt测试
@@ -37,8 +79,11 @@ router.post('/', (req, res, next) => {
       logger.error('用户名或密码错误');
       res.send({login:false})
     }
-
     req.session.loginUser = resUsername;
+
+    logger.info('登录成功');
+    res.send({login:true});
+    //res.redirect('/');
     //console.log(req.sessionID);
     //console.log(req.session.cookie);
     // res.cookie('islogin', resUsername, { maxAge: 60000 });
@@ -46,9 +91,7 @@ router.post('/', (req, res, next) => {
     // req.session.username = res.locals.username;
     // console.log(req.session.username);
     //locals对象用于将数据传递至所渲染的模板中。
-    logger.info('登录成功');
-    //res.redirect('/');
-    res.send({login:true});
+
   })()
     .then(r => {
     })
