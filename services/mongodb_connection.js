@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const uri = 'mongodb://localhost:27017/myblog';
+const uri = 'mongodb://localhost:27017/spider';
 const logger = require('../utils/loggers/logger');
 
 mongoose.connect(uri);

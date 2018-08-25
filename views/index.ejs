@@ -3,50 +3,118 @@
 </head>
 <body>
 <div class="uk-align-center">
-<form>
-    <div class="uk-flex uk-flex-center">
-        <div class="uk-inline">
-            <span class="uk-form-icon" uk-icon="icon: user"></span>
-            <input class="uk-input login-name" type="text">
+    <form id="mainForm">
+        <div class="uk-flex uk-flex-center">
+            <div class="uk-inline">
+                <span class="uk-form-icon" uk-icon="icon: user"></span>
+                <input class="uk-input login-name" type="text">
+            </div>
         </div>
-    </div>
 
-    <div class="uk-flex uk-flex-center">
-        <div class="uk-inline">
-            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock"></span>
-            <input class="uk-input login-password" type="password">
+        <div class="uk-flex uk-flex-center">
+            <div class="uk-inline">
+                <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock"></span>
+                <input class="uk-input login-password" type="password">
+            </div>
         </div>
-    </div>
-</form>
+        <div class="uk-flex uk-flex-center">
+            <div class="uk-inline">
+                <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: mail"></span>
+                <input class="uk-input login-mail" type="text">
+            </div>
+        </div>
+        <div class="uk-flex uk-flex-center">
+            <div class="uk-inline">
+                <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: info"></span>
+                <input class="uk-input login-info" type="text">
+            </div>
+        </div>
+    </form>
     <div class="uk-flex uk-flex-center">
         <button class="uk-button uk-button-default login-submit">登录</button>
+        <button class="uk-button uk-button-default login-register">注册</button>
     </div>
 
 </div>
 
 <script>
-    $('.login-submit').click(() => {
-      const loginName = $('.login-name').val();
-      const loginPassword = $('.login-password').val();
-      //console.log(`${loginName} || ${loginPassword}`)
-      //前端进行md5加密之后再传给后端
-      let md5LoginPassword = md5(loginPassword);
-      $.ajax({
-        type: "POST",
-        url: '/api/login/newlogin',
-        data: {username:loginName,password:md5LoginPassword},
-        success: function (res,status,xhr) {
-          console.log(res);
-          if(res.data.login === false){
+  /*
+   *登录按钮
+   */
+  $('.login-submit').click(() => {
+    const loginName = $('.login-name').val();
+    const loginPassword = $('.login-password').val();
+    //console.log(`${loginName} || ${loginPassword}`)
+    //前端进行md5加密之后再传给后端
+    let md5LoginPassword = md5(loginPassword);
+    $.ajax({
+      type: "POST",
+      url: '/api/login/newlogin',
+      data: {username: loginName, password: md5LoginPassword},
+      success: function (res, status, xhr) {
+        console.log(res);
+        if (res.data.login === false) {
 
-          }
-        },
-        error:function (error) {
-          console.log(`登录失败，失败原因：${error.err}`);
         }
-        //dataType: dataType
-      });
+      },
+      error: function (error) {
+        console.log(`登录失败，失败原因：${error.err}`);
+      }
+      //dataType: dataType
+    });
+  });
+  //注册
+  $('.login-register').click(() => {
+    const regName = $('.login-name').val();
+    const regPassword = md5($('.login-password').val());
+    const regMail = $('.login-mail').val();
+    const regInfo = $('.login-info').val();
+    //先不进行验证，后面在做，今天先把流程跑通
+    $.ajax({
+      type: "POST",
+      url: '/api/register',
+      data: {
+        regName: regName,
+        regPassword: regPassword,
+        regMail:regMail,
+        regInfo:regInfo
+      },
+      success: function (res, status, xhr) {
+        console.log(res);
+        if (res.register === true) {
+            alter('注册成功');
+        }
+      },
+      error: function (error) {
+        console.log(`注册失败，失败原因：${error.err}`);
+      }
+      //dataType: dataType
+    });
 
-    })
+  })
+
+
+  //注册
+  // $('.login-register').click(() => {
+  //   const loginName = $('.login-name').val();
+  //   const loginPassword = $('.login-password').val();
+  //   //console.log(`${loginName} || ${loginPassword}`)
+  //   //前端进行md5加密之后再传给后端
+  //   let md5LoginPassword = md5(loginPassword);
+  //   $.ajax({
+  //     type: "POST",
+  //     url: '/api/register',
+  //     data: {username:loginName,password:md5LoginPassword},
+  //     success: function (res,status,xhr) {
+  //       console.log(res);
+  //       if(res.data.login === false){
+  //       }
+  //     },
+  //     error:function (error) {
+  //       console.log(`登录失败，失败原因：${error.err}`);
+  //     }
+  //     //dataType: dataType
+  //   });
+  // });
 </script>
 <%- include('footer') %>
