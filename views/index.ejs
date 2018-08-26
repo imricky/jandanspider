@@ -44,23 +44,25 @@
   $('.login-submit').click(() => {
     const loginName = $('.login-name').val();
     const loginPassword = $('.login-password').val();
-    //console.log(`${loginName} || ${loginPassword}`)
     //前端进行md5加密之后再传给后端
     let md5LoginPassword = md5(loginPassword);
     $.ajax({
       type: "POST",
-      url: '/api/login/newlogin',
+      url: '/api/login',
       data: {username: loginName, password: md5LoginPassword},
       success: function (res, status, xhr) {
         console.log(res);
-        if (res.data.login === false) {
-
+        if(res.login === false){
+          UIkit.notification(`登录失败，失败原因：${res.err}`);
+        }
+        if (res.login === true) {
+          UIkit.notification(`登录成功`);
         }
       },
-      error: function (error) {
-        console.log(`登录失败，失败原因：${error.err}`);
+      error: function (res, status, xhr) {
+        console.log(`登录失败，失败原因：${res.err}`);
+        UIkit.notification(`登录失败，失败原因：${res.err}`);
       }
-      //dataType: dataType
     });
   });
   //注册
@@ -76,13 +78,13 @@
       data: {
         regName: regName,
         regPassword: regPassword,
-        regMail:regMail,
-        regInfo:regInfo
+        regMail: regMail,
+        regInfo: regInfo
       },
       success: function (res, status, xhr) {
         console.log(res);
         if (res.register === true) {
-            alert('注册成功');
+          UIkit.notification(`注册成功`);
         }
       },
       error: function (error) {
@@ -94,27 +96,5 @@
   })
 
 
-  //注册
-  // $('.login-register').click(() => {
-  //   const loginName = $('.login-name').val();
-  //   const loginPassword = $('.login-password').val();
-  //   //console.log(`${loginName} || ${loginPassword}`)
-  //   //前端进行md5加密之后再传给后端
-  //   let md5LoginPassword = md5(loginPassword);
-  //   $.ajax({
-  //     type: "POST",
-  //     url: '/api/register',
-  //     data: {username:loginName,password:md5LoginPassword},
-  //     success: function (res,status,xhr) {
-  //       console.log(res);
-  //       if(res.data.login === false){
-  //       }
-  //     },
-  //     error:function (error) {
-  //       console.log(`登录失败，失败原因：${error.err}`);
-  //     }
-  //     //dataType: dataType
-  //   });
-  // });
 </script>
 <%- include('footer') %>

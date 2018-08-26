@@ -1,114 +1,70 @@
-const express = require('express');
-const router = express.Router();
+const express = require('express')
+const router = express.Router()
 
-const logger = require('../../utils/loggers/logger');
+const logger = require('../../utils/loggers/logger')
 
-const JWT = require('jsonwebtoken');
+const JWT = require('jsonwebtoken')
 
-const crypto = require('crypto');
-const User = require('../../models/mongoose/user');
-const bluebird = require('bluebird');
-const pbkdf2Async = bluebird.promisify(crypto.pbkdf2);
+const crypto = require('crypto')
+const User = require('../../models/mongoose/user')
+const bluebird = require('bluebird')
+const pbkdf2Async = bluebird.promisify(crypto.pbkdf2)
 
-const session = require('express-session');
+const session = require('express-session')
 
-router.post('/newlogin',(req,res,next) => {
+router.post('/', (req, res, next) => {
   (async () => {
-    const {username,password} = req.body;
-    const userRes = await User.getOneByName(username);
-    if(userRes === null || userRes === ""){
-      logger.error(`用户名或密码错误`);
-      logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || subdomains:${req.subdomains}`);
+    const {username, password} = req.body
+    const userRes = await User.getOneByName(username)
+    if (userRes === null || userRes === "" || userRes === void 0) {
+      logger.error(`用户名不存在`)
+      logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || subdomains:${req.subdomains}`)
       res.json({
-        status:false,
+        status: false,
         login: false,
-        err:"用户不存在或密码错误"
-      });
+        err: "用户不存在"
+      })
     }
-    const resUsername = userRes.name;
-    const resPassword = userRes.password;
+    const resUsername = userRes.name
+    const resPassword = userRes.password
     //比较密码是否正确,后端传过来的是md5 加密过的
-    const cipher = await pbkdf2Async(password,'ashdjkaqkjwjehasd',10000,512,'sha256');
-    if(resUsername !== username || resPassword !== cipher.toString('hex')){
-      logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || subdomains:${req.subdomains}`);
-      logger.error('用户名或密码错误');
+    const cipher = await pbkdf2Async(password, 'ashdjkaqkjwjehasd', 10000, 512, 'sha256')
+    if (resUsername !== username || resPassword !== cipher.toString('hex')) {
+      logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || subdomains:${req.subdomains}`)
+      logger.error('用户名或密码错误')
       res.json({
-        status:false,
+        status: false,
         login: false,
-        err:"用户不存在或密码错误"
-      });
-
-      req.session.loginUser = resUsername;
-      logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || subdomains:${req.subdomains}`);
-      logger.info('登录成功');
-      res.json({
-        status:true,
-        login: true
-        //err:"用户不存在或密码错误"
-      });
+        err: "用户名或或密码错误"
+      })
     }
-  })()
-    .then(r => {
-    })
-    .catch(e => {
-      logger.error(e);
-      next(e);
+    req.session.loginUser = resUsername;
+    logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || subdomains:${req.subdomains}`)
+    logger.info('登录成功')
+    res.json({
+      status: true,
+      login: true
     });
+  })()
+      .then(r => {
+
+      })
+      .catch(e => {
+        logger.error(e)
+        next(e)
+      })
 })
 
 
 //jwt测试
-router.post('/', (req, res, next) => {
-  // logger.info(`url:${req.originalUrl} || ${req.ip}`);
-  // res.set('set-Cookie', `username=${req.query.username}`);
-  // res.send();
-
-  (async () => {
-    const {name,password}=req.body;
-    const userRes = await User.getOneByName(name);
-    if(userRes === null){
-      res.send({login:false})
-    }
-    const resUsername = userRes.name;
-    const resPassword = userRes.password;
-
-    const cipher = await pbkdf2Async(password,'ashdjkaqkjwjehasd',10000,512,'sha256');
-    //userPwd = crypto.createHash('md5').update(password).digest('hex');
-    //用户名和数据库里取出的进行比较
-    if(resUsername !== name || resPassword !== cipher.toString('hex')){
-      logger.error('用户名或密码错误');
-      res.send({login:false})
-    }
-    req.session.loginUser = resUsername;
-
-    logger.info('登录成功');
-    res.send({login:true});
-    //res.redirect('/');
-    //console.log(req.sessionID);
-    //console.log(req.session.cookie);
-    // res.cookie('islogin', resUsername, { maxAge: 60000 });
-    // res.locals.username = resUsername;
-    // req.session.username = res.locals.username;
-    // console.log(req.session.username);
-    //locals对象用于将数据传递至所渲染的模板中。
-
-  })()
-    .then(r => {
-    })
-    .catch(e => {
-      logger.error(e);
-      next(e)
-    });
-
-});
 router.post('/hello', (req, res, next) => {
-  const auth = req.get('Authorization');
-  if(!auth) res.send('no auth!!');
-  if(auth.indexOf('Bearer ') === -1) res.send('no bearer auth!!');
-  const token = auth.split('Bearer ')[1];
-  const user = JWT.verify(token,'qweqwwweqweqwe');
-  if(user.expiredAt < Date.now().valueOf()) res.send('no bearer auth!!');
-  res.send(user);
-});
+  const auth = req.get('Authorization')
+  if (!auth) res.send('no auth!!')
+  if (auth.indexOf('Bearer ') === -1) res.send('no bearer auth!!')
+  const token = auth.split('Bearer ')[1]
+  const user = JWT.verify(token, 'qweqwwweqweqwe')
+  if (user.expiredAt < Date.now().valueOf()) res.send('no bearer auth!!')
+  res.send(user)
+})
 
-module.exports = router;
+module.exports = router
