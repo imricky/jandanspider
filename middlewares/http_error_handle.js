@@ -18,6 +18,7 @@ function handler(options) {
         msg: err.httpMsg
       })
     } else {
+      logger.info(`${req.originalUrl}`)
       next(err);
     }
 

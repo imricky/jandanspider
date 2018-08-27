@@ -27,6 +27,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/login', (req, res, next) => {
+  logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || subdomains:${req.subdomains}`);
   if(req.session.loginUser){
     const user=req.session.loginUser;
     //console.log(req.session);
@@ -38,7 +39,6 @@ router.get('/login', (req, res, next) => {
     res.render('login', {title: 'Express'});
   }
 
-  logger.info(`url:${req.baseUrl} || ${req.ip}`);
   //res.render('login', {title: 'Express'});
 });
 

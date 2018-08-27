@@ -34,7 +34,7 @@ app.use(session({
   secret: 'chyingp',  // 用来对session id相关的cookie进行签名
   //store: new FileStore(),  // 本地存储session（文本文件，也可以选择其他store，比如redis的）
   store: new MongoStore({
-    url: 'mongodb://localhost:27017/myblog',
+    url: 'mongodb://localhost:27017/spider',
     //touchAfter: 24 * 3600 // time period in seconds
     //ttl: 14 * 24 * 60 * 60 // = 14 days. Default
     //ttl: 10  如果session cookie 有过期时间，mongoStore会使用这个，否则会自己创建一个
@@ -71,7 +71,7 @@ app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
   logger.error(err.stack);
-  //console.log('您访问的资源不存在!');
+  // console.log('您访问的资源不存在!');
   // render the error page
   res.status(err.status || 500);
   res.render('error')

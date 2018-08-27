@@ -7,8 +7,7 @@ mongoose.connect(uri);
 const db = mongoose.connection;
 
 db.on('open',()=>{
-  logger.info('database is open');
-  //console.log('open!! ')
+  logger.info(`database is open || open time: ${Date()}`);
 });
 
 db.on("error", function (error) {
