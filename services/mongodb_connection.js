@@ -11,7 +11,7 @@ db.on('open',()=>{
 });
 
 db.on("error", function (error) {
-  logger.error('数据库连接失败');
+  logger.error(`数据库连接失败 || 失败时间: ${Date()}`);
 });
 
 module.exports = db;

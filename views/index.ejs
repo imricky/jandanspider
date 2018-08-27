@@ -51,7 +51,7 @@
       url: '/api/login',
       data: {username: loginName, password: md5LoginPassword},
       success: function (res, status, xhr) {
-        console.log(res);
+        //console.log(res)
         if(res.login === false){
           UIkit.notification(`登录失败，失败原因：${res.err}`);
         }

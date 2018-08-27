@@ -14,11 +14,12 @@ const session = require('express-session')
 
 router.post('/', (req, res, next) => {
   (async () => {
+    //console.log(`${req.cookie} || ${req.session}`)
     const {username, password} = req.body
     const userRes = await User.getOneByName(username)
     if (userRes === null || userRes === "" || userRes === void 0) {
       logger.error(`用户名不存在`)
-      logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || subdomains:${req.subdomains}`)
+      logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || method:${req.method}`)
       res.json({
         status: false,
         login: false,
@@ -30,7 +31,7 @@ router.post('/', (req, res, next) => {
     //比较密码是否正确,后端传过来的是md5 加密过的
     const cipher = await pbkdf2Async(password, 'ashdjkaqkjwjehasd', 10000, 512, 'sha256')
     if (resUsername !== username || resPassword !== cipher.toString('hex')) {
-      logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || subdomains:${req.subdomains}`)
+      logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || method:${req.method}`)
       logger.error('用户名或密码错误')
       res.json({
         status: false,
@@ -39,21 +40,23 @@ router.post('/', (req, res, next) => {
       })
     }
     req.session.loginUser = resUsername;
-    logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || subdomains:${req.subdomains}`)
-    logger.info('登录成功')
+    logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || method:${req.method}`)
+    logger.info('登录成功');
+    //res.redirect('/');
     res.json({
       status: true,
       login: true
     });
   })()
       .then(r => {
-
       })
       .catch(e => {
         logger.error(e)
         next(e)
       })
-})
+});
+
+
 
 
 //jwt测试

@@ -13,13 +13,7 @@ const pbkdf2Async = bluebird.promisify(crypto.pbkdf2);
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
-  // let reqInfo = {
-  //   url:req.originalUrl,
-  //   ip:req.ip,
-  //   path:req.path,
-  //   subdomains:req.subdomains
-  // }
-  logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || subdomains:${req.subdomains}`);
+  logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || method:${req.method}`);
   //logger.info(`reqInfo:${reqInfo}`);
   //res.locals 可以传变量过去，pm2 start .bin/www --watch  一定要加watch 去监控文件的变动
   //res.locals.testu = users;
@@ -27,13 +21,11 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/login', (req, res, next) => {
-  logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || subdomains:${req.subdomains}`);
+  logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || method:${req.method}`);
   if(req.session.loginUser){
     const user=req.session.loginUser;
     //console.log(req.session);
     res.send('你好'+user+'，欢迎来到我的家园。');
-    //res.redirect('/');
-
   }else{
     //res.send('你还没有登录，先登录下再试试！');
     res.render('login', {title: 'Express'});
