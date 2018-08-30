@@ -17,7 +17,17 @@ router.get('/', (req, res, next) => {
   //logger.info(`reqInfo:${reqInfo}`);
   //res.locals 可以传变量过去，pm2 start .bin/www --watch  一定要加watch 去监控文件的变动
   //res.locals.testu = users;
-  res.render('index', {title: '主页'});
+  console.log(`${req.cookie} || ${req.session}`)
+  if(req.session.loginUser){
+    const user=req.session.loginUser;
+    //console.log(req.session);
+    res.send('你好'+user+'，欢迎来到我的家园。');
+  }else{
+    //res.send('你还没有登录，先登录下再试试！');
+    res.locals = {title:'mainpage'}
+    res.render('index');
+  }
+  //res.render('index', {title: '主页'});
 });
 
 router.get('/login', (req, res, next) => {
@@ -40,3 +50,5 @@ router.get('/register', (req, res, next) => {
 });
 
 module.exports = router;
+
+

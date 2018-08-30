@@ -10,11 +10,15 @@ const User = require('../../models/mongoose/user')
 const bluebird = require('bluebird')
 const pbkdf2Async = bluebird.promisify(crypto.pbkdf2)
 
-const session = require('express-session')
+const session = require('express-session');
+
+router.use((req,res,next) => {
+  console.log(123);
+  next();
+})
 
 router.post('/', (req, res, next) => {
   (async () => {
-    //console.log(`${req.cookie} || ${req.session}`)
     const {username, password} = req.body
     const userRes = await User.getOneByName(username)
     if (userRes === null || userRes === "" || userRes === void 0) {
@@ -37,7 +41,7 @@ router.post('/', (req, res, next) => {
         status: false,
         login: false,
         err: "用户名或或密码错误"
-      })
+      });
     }
     req.session.loginUser = resUsername;
     logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || method:${req.method}`)
@@ -51,7 +55,7 @@ router.post('/', (req, res, next) => {
       .then(r => {
       })
       .catch(e => {
-        logger.error(e)
+        logger.error(e);
         next(e)
       })
 });
@@ -68,6 +72,17 @@ router.post('/hello', (req, res, next) => {
   const user = JWT.verify(token, 'qweqwwweqweqwe')
   if (user.expiredAt < Date.now().valueOf()) res.send('no bearer auth!!')
   res.send(user)
-})
+});
+
+router.get('/test',(req,res,next) => {
+  res.status(403).send();
+});
+
+//重定向例子
+router.get('/test1',(req,res,next) => {
+  res.redirect('/api/login/test');
+
+});
+
 
 module.exports = router
