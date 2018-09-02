@@ -8,10 +8,10 @@ mongoose.connect(uri);
 const db = mongoose.connection;
 
 db.on('open',()=>{
-  notifier.notify({
-    title: '提示',
-    message: '数据库连接已创建'
-  });
+  // notifier.notify({
+  //   title: '提示',
+  //   message: '数据库连接已创建'
+  // });
   logger.info(`database is open || open time: ${Date()}`);
 });
 
