@@ -11,6 +11,7 @@ const bluebird = require('bluebird')
 const pbkdf2Async = bluebird.promisify(crypto.pbkdf2)
 
 const session = require('express-session');
+const notifier = require('node-notifier');
 
 router.use((req,res,next) => {
   console.log(123);
@@ -80,7 +81,15 @@ router.get('/test',(req,res,next) => {
 
 //重定向例子
 router.get('/test1',(req,res,next) => {
-  res.redirect('/api/login/test');
+  // String
+  //notifier.notify('Message');
+
+// Object
+  notifier.notify({
+    title: 'My notification',
+    message: '您没有权限，禁止访问哦'
+  });
+  res.sendStatus(403);
 
 });
 
