@@ -21,10 +21,13 @@ router.get('/', (req, res, next) => {
   if(req.session.loginUser){
     const user=req.session.loginUser;
     //console.log(req.session);
-    res.send('你好'+user+'，欢迎来到我的家园。');
+    // res.send('你好'+user+'，欢迎来到我的家园。');
+    res.locals = {title:'mainpage',username: user}
+
+    res.render('index');
   }else{
     //res.send('你还没有登录，先登录下再试试！');
-    res.locals = {title:'mainpage'}
+    res.locals = {title:'mainpage',username: ''}
     res.render('index');
   }
   //res.render('index', {title: '主页'});

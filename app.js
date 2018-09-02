@@ -14,6 +14,7 @@ const logger = require('./utils/loggers/logger') //日志相关
 const indexRouter = require('./routes/index') //主页面
 const usersRouter = require('./routes/api/users') //用户管理页面
 const loginRouter = require('./routes/api/login') //注册页面
+const logoutRouter = require('./routes/api/logout') //注销api
 const registerRouter = require('./routes/api/register') //登录页面
 const aboutRouter = require('./routes/about') //关于页面
 
@@ -57,7 +58,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', indexRouter)
 app.use('/api/users', usersRouter)
-
+app.use('/api/logout', logoutRouter);
 app.use('/api/login', loginRouter)
 app.use('/api/register', registerRouter)
 

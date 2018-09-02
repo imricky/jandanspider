@@ -31,8 +31,14 @@
         </div>
     </form>
     <div class="uk-flex uk-flex-center">
-        <button class="uk-button uk-button-default login-submit">登录</button>
         <button class="uk-button uk-button-default login-register">注册</button>
+
+        <% if (username !== '' && username !== void 0) { %>
+            <button class="uk-button uk-button-default login-logout">注销</button>
+        <% } else { %>
+            <button class="uk-button uk-button-default login-submit">登录</button>
+        <% } %>
+
     </div>
 
 </div>
@@ -57,6 +63,9 @@
         }
         if (res.login === true) {
           UIkit.notification(`登录成功`);
+          setTimeout(() =>{
+            window.location.href="/";    //    请求成功后到你的主页
+          },1000)
         }
       },
       error: function (res, status, xhr) {
@@ -93,6 +102,25 @@
       //dataType: dataType
     });
 
+  });
+
+  $('.login-logout').click(() => {
+    axios.get('/api/logout')
+        .then(function (response) {
+          if(response.data.logout === true){
+            UIkit.notification(`注销成功`);
+            setTimeout(() =>{
+              window.location.href="/";    //    请求成功后到你的主页
+            },1000)
+          }else {
+            UIkit.notification(`注销失败，失败原因：${response.data.errMesssage}`);
+          }
+        })
+        .catch(function (error) {
+          UIkit.notification(`注销失败，失败原因：${error}`);
+        })
+        .then(function () {
+        });
   })
 
 
