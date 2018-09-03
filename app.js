@@ -1,6 +1,8 @@
 const createError = require('http-errors')
 const express = require('express')
 const path = require('path')
+var passport = require('passport')
+var LocalStrategy = require('passport-local').Strategy
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session) //保存session到MongoDB
@@ -50,6 +52,9 @@ app.use(session({
 }))
 app.use(express.static(path.join(__dirname, 'public')))
 
+app.use(passport.initialize())
+app.use(passport.session())
+
 //这里做拦截，可以监听到所有访问的url
 // app.use('', (req, res, next) => {
 //   logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || method:${req.method}`);
@@ -58,7 +63,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', indexRouter)
 app.use('/api/users', usersRouter)
-app.use('/api/logout', logoutRouter);
+app.use('/api/logout', logoutRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/register', registerRouter)
 
