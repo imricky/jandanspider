@@ -19,6 +19,7 @@ const loginRouter = require('./routes/api/login') //注册页面
 const logoutRouter = require('./routes/api/logout') //注销api
 const registerRouter = require('./routes/api/register') //登录页面
 const aboutRouter = require('./routes/about') //关于页面
+const newLoginRouter = require('./routes/api/loginnew')
 
 
 const app = express()
@@ -66,6 +67,7 @@ app.use('/api/users', usersRouter)
 app.use('/api/logout', logoutRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/register', registerRouter)
+app.use('/api/loginnew', newLoginRouter)
 
 app.use('/about', aboutRouter)
 
