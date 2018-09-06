@@ -54,18 +54,19 @@
     let md5LoginPassword = md5(loginPassword);
     $.ajax({
       type: "POST",
-      url: '/api/login',
+      url: '/api/loginnew',
       data: {username: loginName, password: md5LoginPassword},
       success: function (res, status, xhr) {
-        //console.log(res)
+        console.log(res)
         if(res.login === false){
-          UIkit.notification(`登录失败，失败原因：${res.err}`);
+          UIkit.notification(`登录失败，失败原因：${res.err}`,{timeout: 5000});
         }
         if (res.login === true) {
+          console.log(res)
           UIkit.notification(`登录成功`);
-          setTimeout(() =>{
-            window.location.href="/";    //    请求成功后到你的主页
-          },1000)
+          // setTimeout(() =>{
+          //   window.location.href="/";    //    请求成功后到你的主页
+          // },1000)
         }
       },
       error: function (res, status, xhr) {
