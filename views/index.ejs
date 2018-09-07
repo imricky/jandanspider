@@ -44,12 +44,19 @@
 </div>
 
 <script>
+    function isNullOrEmpty(value){
+      return value === null || value === void 0 || value === '' || value.length === 0;
+    }
   /*
    *登录按钮
    */
   $('.login-submit').click(() => {
     const loginName = $('.login-name').val();
     const loginPassword = $('.login-password').val();
+    if(isNullOrEmpty(loginName) || isNullOrEmpty((loginPassword))){
+      UIkit.notification(`用户名和密码不能为空`);
+      return;
+    }
     //前端进行md5加密之后再传给后端
     let md5LoginPassword = md5(loginPassword);
     $.ajax({
@@ -59,7 +66,7 @@
       success: function (res, status, xhr) {
         console.log(res)
         if(res.login === false){
-          UIkit.notification(`登录失败，失败原因：${res.err}`,{timeout: 5000});
+          UIkit.notification(`登录失败，失败原因：${res.errInfo.message}`,{timeout: 5000});
         }
         if (res.login === true) {
           console.log(res)
@@ -70,8 +77,8 @@
         }
       },
       error: function (res, status, xhr) {
-        console.log(`登录失败，失败原因：${res.err}`);
-        UIkit.notification(`登录失败，失败原因：${res.err}`);
+        console.log(`登录失败，失败原因：${res.errInfo.message}`);
+        UIkit.notification(`登录失败，失败原因：${res.errInfo.message}`);
       }
     });
   });
@@ -81,7 +88,11 @@
     const regPassword = md5($('.login-password').val());
     const regMail = $('.login-mail').val();
     const regInfo = $('.login-info').val();
-    //先不进行验证，后面在做，今天先把流程跑通
+
+    if(isNullOrEmpty(regName) || isNullOrEmpty((regPassword))){
+      UIkit.notification(`用户名和密码不能为空`);
+      return;
+    }
     $.ajax({
       type: "POST",
       url: '/api/register',

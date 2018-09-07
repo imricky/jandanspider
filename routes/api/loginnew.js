@@ -26,18 +26,25 @@ passport.use(new LocalStrategy(
         return await User.getOneByName(username)
       })()
           .then(r => {
+            if (r === null || r === "" || r === void 0) {
+              return done(null, false, {message: '用户不存在'})
+            }
             const resUsername = r.name
             const resPassword = r.password
             if (resUsername === void 0 || resPassword === void 0) {
-              return done(null, false, {message: 'Incorrect username.'})
+              return done(null, false, {message: '用户不存在'})
             }
-            validPassword(password, resPassword).then(r=>{
-              if(!r){
-                return done(null, false, {message: 'Incorrect password.'})
+            validPassword(password, resPassword).then(r => {
+              console.log(r)
+              if (!r) {
+                return done(null, false, {message: '密码错误'})
+              } else {
+                return done(null, r)
               }
+            }).catch(e=>{
+              console.log(e)
             })
 
-            return done(null, r)
           })
           .catch(e => {
           })
@@ -48,7 +55,7 @@ router.post('/', (req, res, next) => {
   const {username, password} = req.body
 
   if (!username) {
-    res.status(422).json({
+    return res.status(422).json({
       status: false,
       login: false,
       err: "username is required"
@@ -56,7 +63,7 @@ router.post('/', (req, res, next) => {
   }
 
   if (!password) {
-    res.status(422).json({
+    return res.status(422).json({
       status: false,
       login: false,
       err: "password is required"
@@ -70,18 +77,19 @@ router.post('/', (req, res, next) => {
 
     if (passportUser) {
 
-      res.json({
+      return res.json({
         status: true,
         login: true,
-        info: info,
-        pass: passportUser
+        errInfo: info,
+        userInfo: passportUser
       })
     }
-    res.json({
+    //一定要加return，不然会报错
+    return res.json({
       status: false,
       login: false,
-      info: info,
-      pass: passportUser
+      errInfo: info,
+      userInfo: passportUser
     })
 
     //res.status(400).info;
