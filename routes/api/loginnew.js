@@ -14,7 +14,9 @@ const session = require('express-session')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 
-async function validPassword(password, resPassword) {
+
+async function validPassword(password, resPassword,username) {
+  logger.info(`${username} 调用了密码验证系统`)
   const cipher = await pbkdf2Async(password, 'ashdjkaqkjwjehasd', 10000, 512, 'sha256')
   return resPassword === cipher.toString('hex')
 }
@@ -27,6 +29,7 @@ passport.use(new LocalStrategy(
       })()
           .then(r => {
             if (r === null || r === "" || r === void 0) {
+              logger.info(`${username} 登录了系统`)
               return done(null, false, {message: '用户不存在'})
             }
             const resUsername = r.name
@@ -34,14 +37,15 @@ passport.use(new LocalStrategy(
             if (resUsername === void 0 || resPassword === void 0) {
               return done(null, false, {message: '用户不存在'})
             }
-            validPassword(password, resPassword).then(r => {
+            validPassword(password, resPassword,username).then(r => {
               console.log(r)
               if (!r) {
                 return done(null, false, {message: '密码错误'})
               } else {
                 return done(null, r)
               }
-            }).catch(e=>{
+            }).catch(e => {
+              logger.error(e)
               console.log(e)
             })
 
@@ -54,6 +58,7 @@ passport.use(new LocalStrategy(
 router.post('/', (req, res, next) => {
   const {username, password} = req.body
 
+  logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || method:${req.method}`)
   if (!username) {
     return res.status(422).json({
       status: false,
@@ -72,11 +77,14 @@ router.post('/', (req, res, next) => {
 
   return passport.authenticate('local', {session: true}, (err, passportUser, info) => {
     if (err) {
+      logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || method:${req.method}`)
+      logger.error(err)
       return next(err)
     }
 
     if (passportUser) {
-
+      logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || method:${req.method}`)
+      logger.info(`登录成功。用户名：${passportUser.username}`)
       return res.json({
         status: true,
         login: true,
