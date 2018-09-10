@@ -21,9 +21,6 @@ class UserMethods {
   constructor() {
   }
 
-  toString() {
-    return '(' + this.x + ', ' + this.y + ')'
-  }
 
   static async insert(user) {
     return await UserModel.create(user)
@@ -47,8 +44,9 @@ class UserMethods {
 
 }
 
-class TestMethod {
+class TestMethod extends UserMethods {
   constructor() {
+    super()
   }
 
   static async getOneByName(name) {
