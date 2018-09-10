@@ -15,7 +15,7 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 
 
-async function validPassword(password, resPassword,username) {
+async function validPassword(password, resPassword, username) {
   logger.info(`${username} 调用了密码验证系统`)
   const cipher = await pbkdf2Async(password, 'ashdjkaqkjwjehasd', 10000, 512, 'sha256')
   return resPassword === cipher.toString('hex')
@@ -23,11 +23,11 @@ async function validPassword(password, resPassword,username) {
 
 
 passport.use(new LocalStrategy({
-      passReqToCallback: true,
+      //passReqToCallback: true,
     },
-    (req,username, password, done) => {
+    (username, password, done) => {
       (async () => {
-        return await User.getOneByName(username)
+        return await User.UserMethods.getOneByName(username)
       })()
           .then(r => {
             if (r === null || r === "" || r === void 0) {
@@ -39,7 +39,7 @@ passport.use(new LocalStrategy({
             if (resUsername === void 0 || resPassword === void 0) {
               return done(null, false, {message: '用户不存在'})
             }
-            validPassword(password, resPassword,username).then(validRes => {
+            validPassword(password, resPassword, username).then(validRes => {
               console.log(validRes)
               if (!validRes) {
                 return done(null, false, {message: '密码错误'})
@@ -84,26 +84,26 @@ router.post('/', (req, res, next) => {
       return next(err)
     }
 
-    if (passportUser) {
-      req.session.loginUser = username;
-      logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || method:${req.method}`)
-      logger.info(`登录成功。用户名：${passportUser.username}`)
+    if (!passportUser) {
+      //一定要加return，不然会报错
       return res.json({
-        status: true,
-        login: true,
+        status: false,
+        login: false,
         errInfo: info,
-        userInfo: passportUser,
-        a:`123${req.username}`
+        userInfo: passportUser
       })
     }
-    //一定要加return，不然会报错
-    return res.json({
-      status: false,
-      login: false,
-      errInfo: info,
-      userInfo: passportUser
-    })
 
+    req.session.loginUser = passportUser.name
+    logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || method:${req.method}`)
+    logger.info(`登录成功。用户名：${passportUser.name}`)
+    return res.json({
+      status: true,
+      login: true,
+      errInfo: `${info}`,
+      userInfo: passportUser,
+      a: `123${req.username}`
+    })
     //res.status(400).info;
   })(req, res, next)
 })

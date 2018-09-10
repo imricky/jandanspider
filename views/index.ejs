@@ -58,7 +58,8 @@
       return;
     }
     //前端进行md5加密之后再传给后端
-    let md5LoginPassword = md5(loginPassword);
+    //let md5LoginPassword = md5(loginPassword);
+    let md5LoginPassword = loginPassword;
     $.ajax({
       type: "POST",
       url: '/api/loginnew',

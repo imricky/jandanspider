@@ -9245,7 +9245,7 @@
         events: {
 
             itemshown: function() {
-                this.$update(this.list);
+                this.$update(UserMethods.list);
             }
 
         },
@@ -9516,7 +9516,7 @@
 
             this.caption = $('.uk-lightbox-caption', this.$el);
 
-            this.items.forEach(function () { return append(this$1.list, '<li></li>'); });
+            this.items.forEach(function () { return append(UserMethods.list, '<li></li>'); });
 
         },
 
@@ -10491,7 +10491,7 @@
     function Transitioner$1 (prev, next, dir, ref) {
         var center = ref.center;
         var easing = ref.easing;
-        var list = ref.list;
+        var list = UserMethods.list;
 
 
         var deferred = new Deferred();
@@ -10677,13 +10677,13 @@
         computed: {
 
             avgWidth: function() {
-                return getWidth(this.list) / this.length;
+                return getWidth(UserMethods.list) / this.length;
             },
 
             finite: function(ref) {
                 var finite = ref.finite;
 
-                return finite || getWidth(this.list) < this.list.offsetWidth + getMaxWidth(this.list) + this.center;
+                return finite || getWidth(UserMethods.list) < UserMethods.list.offsetWidth + getMaxWidth(UserMethods.list) + this.center;
             },
 
             maxIndex: function() {
@@ -10700,11 +10700,11 @@
 
                 css(this.slides, 'order', '');
 
-                var max = getMax(this.list);
+                var max = getMax(UserMethods.list);
                 var i = this.length;
 
                 while (i--) {
-                    if (getElLeft(this$1.list.children[i], this$1.list) < max) {
+                    if (getElLeft(UserMethods.list.children[i], UserMethods.list) < max) {
                         return Math.min(i + 1, this$1.length - 1);
                     }
                 }
@@ -10717,7 +10717,7 @@
                 var sets = ref.sets;
 
 
-                var width$$1 = this.list.offsetWidth / (this.center ? 2 : 1);
+                var width$$1 = UserMethods.list.offsetWidth / (this.center ? 2 : 1);
 
                 var left = 0;
                 var leftCenter = width$$1;
@@ -10867,7 +10867,7 @@
                 }
 
                 var next = this.slides[index$$1];
-                var width$$1 = this.list.offsetWidth / 2 - next.offsetWidth / 2;
+                var width$$1 = UserMethods.list.offsetWidth / 2 - next.offsetWidth / 2;
                 var j = 0;
 
                 while (width$$1 > 0) {
@@ -11191,7 +11191,7 @@
             write: function(ref) {
                 var hgt = ref.height;
 
-                height(this.list, Math.floor(hgt));
+                height(UserMethods.list, Math.floor(hgt));
             },
 
             events: ['load', 'resize']
@@ -11378,7 +11378,7 @@
                     return;
                 }
 
-                sortable.insert(this.placeholder, target);
+                UserMethods.insert(this.placeholder, target);
 
                 if (!includes(this.touched, sortable)) {
                     this.touched.push(sortable);
