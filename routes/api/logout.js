@@ -13,7 +13,7 @@ router.get('/',(req,res,next) => {
     if(err){
       res.json({
         logout:false,
-        errMesssage:err,
+        errMessage:err,
         ret_code: 2,
         ret_msg: '退出登录失败'
       });

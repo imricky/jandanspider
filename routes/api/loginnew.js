@@ -22,8 +22,10 @@ async function validPassword(password, resPassword,username) {
 }
 
 
-passport.use(new LocalStrategy(
-    (username, password, done) => {
+passport.use(new LocalStrategy({
+      passReqToCallback: true,
+    },
+    (req,username, password, done) => {
       (async () => {
         return await User.getOneByName(username)
       })()
@@ -37,9 +39,9 @@ passport.use(new LocalStrategy(
             if (resUsername === void 0 || resPassword === void 0) {
               return done(null, false, {message: '用户不存在'})
             }
-            validPassword(password, resPassword,username).then(r => {
-              console.log(r)
-              if (!r) {
+            validPassword(password, resPassword,username).then(validRes => {
+              console.log(validRes)
+              if (!validRes) {
                 return done(null, false, {message: '密码错误'})
               } else {
                 return done(null, r)
@@ -83,13 +85,15 @@ router.post('/', (req, res, next) => {
     }
 
     if (passportUser) {
+      req.session.loginUser = username;
       logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || method:${req.method}`)
       logger.info(`登录成功。用户名：${passportUser.username}`)
       return res.json({
         status: true,
         login: true,
         errInfo: info,
-        userInfo: passportUser
+        userInfo: passportUser,
+        a:`123${req.username}`
       })
     }
     //一定要加return，不然会报错

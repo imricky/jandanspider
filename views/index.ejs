@@ -85,7 +85,8 @@
   //注册
   $('.login-register').click(() => {
     const regName = $('.login-name').val();
-    const regPassword = md5($('.login-password').val());
+    const regPassword = $('.login-password').val();
+    //const regPassword = md5($('.login-password').val());
     const regMail = $('.login-mail').val();
     const regInfo = $('.login-info').val();
 
@@ -125,7 +126,7 @@
               window.location.href="/";    //    请求成功后到你的主页
             },1000)
           }else {
-            UIkit.notification(`注销失败，失败原因：${response.data.errMesssage}`);
+            UIkit.notification(`注销失败，失败原因：${response.data.errMessage}`);
           }
         })
         .catch(function (error) {
