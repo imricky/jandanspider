@@ -33,7 +33,7 @@
     }
     $.post("/api/login/newlogin", { "name": name,"password":password },
         function(data){
-          console.log(data); //  2pm
+          //console.log(data); //  2pm
           if(data.login === false){
             alert('用户名或密码错误!');
           }else {

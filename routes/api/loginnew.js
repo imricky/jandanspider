@@ -94,7 +94,7 @@ router.post('/', (req, res, next) => {
       })
     }
 
-    req.session.loginUser = passportUser.name
+    req.session.loginUser = passportUser.name //把用户信息塞到session里去，就可以鉴权了
     logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || method:${req.method}`)
     logger.info(`登录成功。用户名：${passportUser.name}`)
     return res.json({
@@ -102,7 +102,6 @@ router.post('/', (req, res, next) => {
       login: true,
       errInfo: `${info}`,
       userInfo: passportUser,
-      // a: `123${req.username}`
     })
     //res.status(400).info;
   })(req, res, next)

@@ -15,16 +15,17 @@ router.get('/',(req,res,next) => {
         logout:false,
         errMessage:err,
         ret_code: 2,
-        ret_msg: '退出登录失败'
+        ret_msg: '退出登录失败,请联系管理员'
       });
       return;
     }
-
+    let userName = req.session.loginUser;
     // req.session.loginUser = null;
     res.clearCookie();
+    logger.info(`${userName} 注销了系统`)
     res.json({
       logout:true,
-
+      userName:userName
     })
     //res.redirect('/');
   });
