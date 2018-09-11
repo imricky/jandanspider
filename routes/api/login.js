@@ -14,14 +14,13 @@ const session = require('express-session');
 const notifier = require('node-notifier');
 
 router.use((req,res,next) => {
-  console.log(123);
   next();
 })
 
 router.post('/', (req, res, next) => {
   (async () => {
     const {username, password} = req.body
-    const userRes = await User.getOneByName(username)
+    const userRes = await User.UserMethods.getOneByName(username)
     if (userRes === null || userRes === "" || userRes === void 0) {
       logger.error(`用户名不存在`)
       logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || method:${req.method}`)

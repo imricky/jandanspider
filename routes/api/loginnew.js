@@ -37,10 +37,10 @@ passport.use(new LocalStrategy({
             const resUsername = r.name
             const resPassword = r.password
             if (resUsername === void 0 || resPassword === void 0) {
+              logger.info(`${resUsername} 用户不存在`)
               return done(null, false, {message: '用户不存在'})
             }
             validPassword(password, resPassword, username).then(validRes => {
-              console.log(validRes)
               if (!validRes) {
                 return done(null, false, {message: '密码错误'})
               } else {
@@ -48,11 +48,11 @@ passport.use(new LocalStrategy({
               }
             }).catch(e => {
               logger.error(e)
-              console.log(e)
             })
 
           })
           .catch(e => {
+            logger.error(e)
           })
     }
 ))
@@ -102,7 +102,7 @@ router.post('/', (req, res, next) => {
       login: true,
       errInfo: `${info}`,
       userInfo: passportUser,
-      a: `123${req.username}`
+      // a: `123${req.username}`
     })
     //res.status(400).info;
   })(req, res, next)

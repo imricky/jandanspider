@@ -12,6 +12,8 @@ const errHandler = require('./middlewares/http_error_handle')
 
 const logger = require('./utils/loggers/logger') //日志相关
 
+const authSession = require('./middlewares/authSession')
+
 
 const indexRouter = require('./routes/index') //主页面
 const usersRouter = require('./routes/api/users') //用户管理页面
@@ -63,7 +65,7 @@ app.use(passport.session())
 // })
 
 app.use('/', indexRouter)
-app.use('/api/users', usersRouter)
+app.use('/api/users', authSession, usersRouter)
 app.use('/api/logout', logoutRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/register', registerRouter)
