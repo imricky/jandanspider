@@ -3,6 +3,8 @@ const router = express.Router()
 
 const logger = require('../../utils/loggers/logger')
 
+const passport = require('../../middlewares/auth/authPassportLocal')
+
 const JWT = require('jsonwebtoken')
 
 const crypto = require('crypto')
@@ -10,14 +12,27 @@ const User = require('../../models/mongoose/user')
 const bluebird = require('bluebird')
 const pbkdf2Async = bluebird.promisify(crypto.pbkdf2)
 
-const session = require('express-session');
-const notifier = require('node-notifier');
+const notifier = require('node-notifier')
 
-router.use((req,res,next) => {
-  next();
+//每一次访问都会经过这里，可以做一些处理，暂时注释掉
+// router.use((req,res,next) => {
+//   next();
+// })
+
+//登录的api
+router.post('/', passport.authenticate('local'), (req, res, next) => {
+
+  res.json({
+    status: true,
+    login: true,
+    userInfo: `${req.user.name}`,
+    test:`qqwe`
+  })
+
 })
 
-router.post('/', (req, res, next) => {
+
+router.post('/t1', (req, res, next) => {
   (async () => {
     const {username, password} = req.body
     const userRes = await User.UserMethods.getOneByName(username)
@@ -41,24 +56,24 @@ router.post('/', (req, res, next) => {
         status: false,
         login: false,
         err: "用户名或或密码错误"
-      });
+      })
     }
-    req.session.loginUser = resUsername;
+    req.session.loginUser = resUsername
     logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || method:${req.method}`)
-    logger.info('登录成功');
+    logger.info('登录成功')
     //res.redirect('/');
     res.json({
       status: true,
       login: true
-    });
+    })
   })()
       .then(r => {
       })
       .catch(e => {
-        logger.error(e);
+        logger.error(e)
         next(e)
       })
-});
+})
 
 
 //jwt测试
@@ -70,14 +85,14 @@ router.post('/hello', (req, res, next) => {
   const user = JWT.verify(token, 'qweqwwweqweqwe')
   if (user.expiredAt < Date.now().valueOf()) res.send('no bearer auth!!')
   res.send(user)
-});
+})
 
-router.get('/test',(req,res,next) => {
-  res.status(403).send();
-});
+router.get('/test', (req, res, next) => {
+  res.status(403).send()
+})
 
 //重定向例子
-router.get('/test1',(req,res,next) => {
+router.get('/test1', (req, res, next) => {
   // String
   //notifier.notify('Message');
 
@@ -85,10 +100,17 @@ router.get('/test1',(req,res,next) => {
   notifier.notify({
     title: 'My notification',
     message: '您没有权限，禁止访问哦'
-  });
-  res.sendStatus(403);
+  })
+  res.sendStatus(403)
 
-});
+})
+
+//权限中间件拦截
+router.get('/test2', passport.authenticateMiddleware(), function (req, res, next) {
+
+  res.send(`允许访问 ${req.user.name}`)
+
+})
 
 
 module.exports = router

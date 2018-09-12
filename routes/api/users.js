@@ -5,8 +5,10 @@ const router = express.Router();
 const UserService = require('../../services/user_service');
 const HTTPReqParamError = require('../../errors/http_request_param');
 
+const passport = require('../../middlewares/auth/authPassportLocal')
+
 /* GET users listing. */
-router.get('/', (req, res, next) => {
+router.get('/', passport.authenticateMiddleware(),(req, res, next) => {
   (async () => {
     const users = await UserService.getAllUsers();
     res.locals.users = users;

@@ -2,7 +2,6 @@ const createError = require('http-errors')
 const express = require('express')
 const path = require('path')
 var passport = require('passport')
-var LocalStrategy = require('passport-local').Strategy
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session) //保存session到MongoDB
@@ -12,7 +11,7 @@ const errHandler = require('./middlewares/http_error_handle')
 
 const logger = require('./utils/loggers/logger') //日志相关
 
-const authSession = require('./middlewares/authSession')
+const authSession = require('./middlewares/auth/authSession')  //以前校验权限的，现在直接在路由里面做
 
 
 const indexRouter = require('./routes/index') //主页面
@@ -65,7 +64,7 @@ app.use(passport.session())
 // })
 
 app.use('/', indexRouter)
-app.use('/api/users', authSession, usersRouter)
+app.use('/api/users', usersRouter)
 app.use('/api/logout', logoutRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/register', registerRouter)
