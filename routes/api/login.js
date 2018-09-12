@@ -20,14 +20,55 @@ const notifier = require('node-notifier')
 // })
 
 //登录的api
-router.post('/', passport.authenticate('local'), (req, res, next) => {
+// router.post('/', passport.authenticate('local'), (req, res, next) => {
+//
+//   res.json({
+//     status: true,
+//     login: true,
+//     userInfo: `${req.user.name}`,
+//     test:`qqwe`
+//   })
+//
+// })
 
-  res.json({
-    status: true,
-    login: true,
-    userInfo: `${req.user.name}`,
-    test:`qqwe`
-  })
+router.post('/', (req, res, next) => {
+  return passport.authenticate('local', (err, passportUser, info) => {
+    if (err) {
+      logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || method:${req.method}`)
+      logger.error(err)
+      return next(err)
+    }
+
+    if (!passportUser) {
+      //一定要加return，不然会报错
+      return res.json({
+        status: false,
+        login: false,
+        errInfo: info,
+        userInfo: passportUser
+      })
+    }
+
+    req.logIn(passportUser, function(err_login) {
+      if (err_login) {
+        console.log("Error while login: " + err_login);
+        return next(err_login);
+      }
+
+      // req.session.messages = "Login successfull";
+      // req.session.authenticated = true;
+      // req.authenticated = true;
+      req.session.loginUser = passportUser.name //把用户信息塞到session里去，就可以鉴权了
+      return res.json({
+        status: true,
+        login: true,
+        errInfo: `${info}`,
+        userInfo: passportUser,
+      })
+    });
+
+    //res.status(400).info;
+  })(req, res, next)
 
 })
 
