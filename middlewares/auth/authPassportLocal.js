@@ -85,7 +85,6 @@ passport.authenticateMiddleware = () => {
     res.status(403).send('非法访问')
     // res.locals = {title:'404',username: ''}
     // res.render('index');
-
   }
 
 }

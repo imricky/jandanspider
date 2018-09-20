@@ -18,8 +18,8 @@ const notifier = require('node-notifier')
 // router.use((req,res,next) => {
 //   next();
 // })
-
-//登录的api
+//
+// 登录的api(非自定义返回)
 // router.post('/', passport.authenticate('local'), (req, res, next) => {
 //
 //   res.json({
@@ -31,6 +31,7 @@ const notifier = require('node-notifier')
 //
 // })
 
+//登录新的api(自定义返回json数据)
 router.post('/', (req, res, next) => {
   return passport.authenticate('local', (err, passportUser, info) => {
     if (err) {
@@ -54,11 +55,10 @@ router.post('/', (req, res, next) => {
         console.log("Error while login: " + err_login);
         return next(err_login);
       }
-
       // req.session.messages = "Login successfull";
       // req.session.authenticated = true;
       // req.authenticated = true;
-      req.session.loginUser = passportUser.name //把用户信息塞到session里去，就可以鉴权了
+      //req.session.loginUser = passportUser.name //把用户信息塞到session里去，就可以鉴权了
       return res.json({
         status: true,
         login: true,
