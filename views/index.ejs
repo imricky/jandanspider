@@ -1,146 +1,141 @@
 <%- include('./commonComponents/header') %>
 <script src="./javascripts/md5.min.js"></script>
+<style>
+    .el-header, .el-footer {
+        background-color: #B3C0D1;
+        color: #333;
+        text-align: center;
+        line-height: 60px;
+    }
+
+    .el-aside {
+        background-color: #D3DCE6;
+        color: #333;
+        text-align: center;
+        line-height: 200px;
+    }
+
+    .el-main {
+        background-color: #E9EEF3;
+        color: #333;
+        text-align: center;
+        line-height: 400px;
+    }
+
+    body > .el-container {
+        margin-bottom: 40px;
+        flex: border-box;
+    }
+
+    .el-container:nth-child(5) .el-aside,
+    .el-container:nth-child(6) .el-aside {
+        line-height: 260px;
+    }
+
+    .el-container:nth-child(7) .el-aside {
+        line-height: 320px;
+    }
+</style>
 </head>
 <body>
 
-<%- include('./commonComponents/mainnav') %>
-
-<div class="uk-align-center">
-    <form id="mainForm">
-        <div class="uk-flex uk-flex-center">
-            <div class="uk-inline">
-                <span class="uk-form-icon" uk-icon="icon: user"></span>
-                <input class="uk-input login-name" type="text">
-            </div>
-        </div>
-
-        <div class="uk-flex uk-flex-center">
-            <div class="uk-inline">
-                <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock"></span>
-                <input class="uk-input login-password" type="password">
-            </div>
-        </div>
-        <div class="uk-flex uk-flex-center">
-            <div class="uk-inline">
-                <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: mail"></span>
-                <input class="uk-input login-mail" type="text">
-            </div>
-        </div>
-        <div class="uk-flex uk-flex-center">
-            <div class="uk-inline">
-                <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: info"></span>
-                <input class="uk-input login-info" type="text">
-            </div>
-        </div>
-    </form>
-    <div class="uk-flex uk-flex-center">
-        <button class="uk-button uk-button-default login-register">注册</button>
-
-        <% if (username !== '' && username !== void 0) { %>
-            <button class="uk-button uk-button-default login-logout">注销</button>
-        <% } else { %>
-            <button class="uk-button uk-button-default login-submit">登录</button>
-        <% } %>
-
-    </div>
-
-
+<div id="app">
+    <el-container>
+        <el-header>登录</el-header>
+        <el-main>
+            <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px"
+                     class="demo-ruleForm">
+                <el-form-item label="密码" prop="pass">
+                    <el-input type="password" v-model="ruleForm2.pass" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="确认密码" prop="checkPass">
+                    <el-input type="password" v-model="ruleForm2.checkPass" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="年龄" prop="age">
+                    <el-input v-model.number="ruleForm2.age"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm('ruleForm2')">提交</el-button>
+                    <el-button @click="resetForm('ruleForm2')">重置</el-button>
+                </el-form-item>
+            </el-form>
+        </el-main>
+    </el-container>
 </div>
 
 <script>
-    function isNullOrEmpty(value){
-      return value === null || value === void 0 || value === '' || value.length === 0;
-    }
-  /*
-   *登录按钮
-   */
-  $('.login-submit').click(() => {
-    const loginName = $('.login-name').val();
-    const loginPassword = $('.login-password').val();
-    if(isNullOrEmpty(loginName) || isNullOrEmpty((loginPassword))){
-      UIkit.notification(`用户名和密码不能为空`);
-      return;
-    }
-    //前端进行md5加密之后再传给后端
-    //let md5LoginPassword = md5(loginPassword);
-    let md5LoginPassword = loginPassword;
-    $.ajax({
-      type: "POST",
-      url: '/api/login',
-      data: {username: loginName, password: md5LoginPassword},
-      success: function (res, status, xhr) {
-        console.log(res)
-        if(res.login === false){
-          UIkit.notification(`登录失败，失败原因：${res.errInfo.message}`,{timeout: 5000});
+  new Vue({
+    el: '#app',
+    data: function () {
+      var checkAge = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('年龄不能为空'));
         }
-        if (res.login === true) {
-          //console.log(res)
-          UIkit.notification(`登录成功`);
-          // setTimeout(() =>{
-          //   window.location.href="/";    //    请求成功后到你的主页
-          // },1000)
-        }
-      },
-      error: function (res, status, xhr) {
-        console.log(`登录失败，失败原因：${res.errInfo.message}`);
-        UIkit.notification(`登录失败，失败原因：${res.errInfo.message}`);
-      }
-    });
-  });
-  //注册
-  $('.login-register').click(() => {
-    const regName = $('.login-name').val();
-    const regPassword = $('.login-password').val();
-    //const regPassword = md5($('.login-password').val());
-    const regMail = $('.login-mail').val();
-    const regInfo = $('.login-info').val();
-
-    if(isNullOrEmpty(regName) || isNullOrEmpty((regPassword))){
-      UIkit.notification(`用户名和密码不能为空`);
-      return;
-    }
-    $.ajax({
-      type: "POST",
-      url: '/api/register',
-      data: {
-        regName: regName,
-        regPassword: regPassword,
-        regMail: regMail,
-        regInfo: regInfo
-      },
-      success: function (res, status, xhr) {
-        console.log(res);
-        if (res.register === true) {
-          UIkit.notification(`注册成功`);
-        }
-      },
-      error: function (error) {
-        console.log(`注册失败，失败原因：${error.err}`);
-      }
-      //dataType: dataType
-    });
-
-  });
-
-  $('.login-logout').click(() => {
-    axios.get('/api/logout')
-        .then(function (response) {
-          if(response.data.logout === true){
-            UIkit.notification(`注销成功`);
-            setTimeout(() =>{
-              window.location.href="/";    //    请求成功后到你的主页
-            },1000)
-          }else {
-            UIkit.notification(`注销失败，失败原因：${response.data.errMessage}`);
+        setTimeout(() => {
+          if (!Number.isInteger(value)) {
+            callback(new Error('请输入数字值'));
+          } else {
+            if (value < 18) {
+              callback(new Error('必须年满18岁'));
+            } else {
+              callback();
+            }
           }
-        })
-        .catch(function (error) {
-          UIkit.notification(`注销失败，失败原因：${error}`);
-        })
-        .then(function () {
+        }, 1000);
+      };
+      var validatePass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          if (this.ruleForm2.checkPass !== '') {
+            this.$refs.ruleForm2.validateField('checkPass');
+          }
+          callback();
+        }
+      };
+      var validatePass2 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.ruleForm2.pass) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+      };
+      return {
+        ruleForm2: {
+          pass: '',
+          checkPass: '',
+          age: ''
+        },
+        rules2: {
+          pass: [
+            { validator: validatePass, trigger: 'blur' }
+          ],
+          checkPass: [
+            { validator: validatePass2, trigger: 'blur' }
+          ],
+          age: [
+            { validator: checkAge, trigger: 'blur' }
+          ]
+        }
+      };
+    },
+    methods: {
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('submit!');
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
         });
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      }
+    }
   })
-
-
 </script>
 <%- include('./commonComponents/footer') %>
