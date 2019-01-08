@@ -1,47 +1,146 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>登录页面</title>
-    <link rel='stylesheet' href='./stylesheets/style.css' />
-    <script src="./javascripts/jquery.js"></script>
+<%- include('./commonComponents/header') %>
+<script src="./javascripts/md5.min.js"></script>
+<style>
+    .el-header, .el-footer {
+        background-color: #B3C0D1;
+        color: #333;
+        text-align: center;
+        line-height: 60px;
+    }
 
+    .el-aside {
+        background-color: #D3DCE6;
+        color: #333;
+        text-align: center;
+        line-height: 200px;
+    }
+
+    .el-main {
+        background-color: #E9EEF3;
+        color: #333;
+        text-align: center;
+        line-height: 400px;
+
+    }
+
+    body > .el-container {
+        margin-bottom: 40px;
+        flex: border-box;
+
+    }
+
+    .el-container:nth-child(5) .el-aside,
+    .el-container:nth-child(6) .el-aside {
+        line-height: 260px;
+    }
+
+    .el-container:nth-child(7) .el-aside {
+        line-height: 320px;
+    }
+</style>
 </head>
 <body>
-<!--<h1>欢迎来到登录页面</h1>-->
-<!--<p>Welcome to <%= title %></p>-->
 
-<span>用户名：</span>
-<input type="text" id="name" />
-
-<!--<span>年龄：</span>-->
-<!--<input type="text" id="age" />-->
-
-<span>密码：</span>
-<input type="password" id="password" />
-
-<button id="submitlogin">提交</button>
+<div id="app">
+    <el-container>
+        <el-header>登录和注册</el-header>
+        <el-main>
+            <el-form :model="loginForm" status-icon :rules="rules" ref="loginForm" label-width="100px"
+                     class="demo-ruleForm">
+                <el-form-item label="用户名" prop="username" required>
+                    <el-input v-model="loginForm.username" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="密码" prop="password" required>
+                    <el-input type="password" v-model="loginForm.password" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
+                    <el-button @click="resetForm('loginForm')">注册</el-button>
+                </el-form-item>
+            </el-form>
+        </el-main>
+    </el-container>
+</div>
 
 <script>
-  $('#submitlogin').click(() => {
-    const name = $('#name').val();
-    //const age = $('#age').val();
-    const password = $('#password').val();
-    if(!name || !password){
-
-      alert('用户名或密码不能为空');
-      return;
-    }
-    $.post("/api/login/newlogin", { "name": name,"password":password },
-        function(data){
-          //console.log(data); //  2pm
-          if(data.login === false){
-            alert('用户名或密码错误!');
-          }else {
-            alert('登录成功!');
-            window.location.href = "/";  //实现返回结果后实现跳转
+  new Vue({
+    el: '#app',
+    data() {
+      let validateUsername = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('用户名不能为空'));
+        } else {
+          callback();
+        }
+      };
+      let validatePassword = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('密码不能为空'));
+        } else {
+          callback();
+        }
+      };
+      return {
+        loginForm: {
+          username: '',
+          password: '',
+        },
+        rules: {
+          username: [
+            {validator: validateUsername, trigger: 'blur'}
+          ],
+          password: [
+            {validator: validatePassword, trigger: 'blur'}
+          ],
+        }
+      };
+    },
+    methods: {
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            let loginName = this.loginForm.username;
+            let md5LoginPassword = md5(this.loginForm.password);
+            axios({
+              method: 'post',
+              url: '/api/login',
+              data: {
+                username: loginName,
+                password: md5LoginPassword},
+            })
+            .then((res) => {
+              if(res.data.login === false){
+                this.$message.error(`登录失败，失败原因:${res.data.errInfo.message}`);
+                return false;
+              }
+              if (res.data.login === true) {
+                this.$message({
+                  message: '恭喜你，登录成功，正在跳转...',
+                  type: 'success',
+                  duration:1000,
+                  onClose:()=>{
+                    window.location.href="/";    //    请求成功后到你的主页
+                    // setTimeout(() =>{
+                    //   window.location.href="/";    //    请求成功后到你的主页
+                    // },1000)
+                  }
+                });
+              }
+            })
+            .catch((error) => {
+              this.$message.error(`登录失败，失败原因:${error}`);
+            });
+          } else {
+            this.$message.error(`输入不合法，请重新输入`);
+            return false;
           }
         });
-  });
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
+    }
+
+  })
 </script>
-</body>
-</html>
+<%- include('./commonComponents/footer') %>
