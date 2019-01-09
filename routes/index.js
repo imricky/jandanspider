@@ -31,6 +31,7 @@ router.get('/', (req, res, next) => {
   //res.render('index', {title: '主页'});
 });
 
+//登录界面暂时挂到index下
 router.get('/login', (req, res, next) => {
   logger.info(`url:${req.originalUrl} || ip:${req.ip} || path:${req.path} || method:${req.method}`);
   if(req.session.loginUser){
@@ -44,9 +45,10 @@ router.get('/login', (req, res, next) => {
 
 });
 
-router.get('/register', (req, res, next) => {
+//注册界面
+router.get('/signup', (req, res, next) => {
   logger.info(`url:${req.originalUrl} || ${req.ip}`);
-  res.render('register', {title: '注册页面'});
+  res.render('signup', {title: '注册页面'});
 });
 
 module.exports = router;

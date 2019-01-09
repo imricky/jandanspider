@@ -58,7 +58,7 @@ router.post('/', (req, res, next) => {
       // req.session.messages = "Login successfull";
       // req.session.authenticated = true;
       // req.authenticated = true;
-      //req.session.loginUser = passportUser.name //把用户信息塞到session里去，就可以鉴权了
+      req.session.loginUser = passportUser.name //把用户信息塞到session里去，就可以鉴权了
       return res.json({
         status: true,
         login: true,

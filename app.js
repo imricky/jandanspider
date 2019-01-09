@@ -16,7 +16,6 @@ const authSession = require('./middlewares/auth/authSession')  //以前校验权
 
 //页面
 const indexRouter = require('./routes/index') //主页面
-const signupRouter = require('./routes/signup') //注册页面
 
 //接口
 const usersRouter = require('./routes/api/users') //用户管理页面
@@ -75,7 +74,6 @@ app.use('/api/login', loginRouter)
 app.use('/api/register', registerRouter)
 
 app.use('/about', aboutRouter)
-app.use('/signup',signupRouter)
 
 //处理http请求相关的错误
 app.use(errHandler())

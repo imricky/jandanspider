@@ -10,6 +10,8 @@ const User = require('../../models/mongoose/user');
 const bluebird = require('bluebird');
 const pbkdf2Async = bluebird.promisify(crypto.pbkdf2);
 
+const UserService = require('../../services/user_service')
+
 router.post('/', (req, res, next) => {
   //md5 = crypto.createHash('md5');
   //userPwd = md5.update(password).digest('hex');
@@ -25,7 +27,7 @@ router.post('/', (req, res, next) => {
     }
 
     //const created = await User.insert({regName,regMail,regInfo,password:cipher.toString('hex')});
-    const created = await User.UserMethods.insert(insertData);
+    const created = await UserService.insertUser(insertData);
     //res.redirect("../login");
     return created;
   })()
