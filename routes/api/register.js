@@ -25,7 +25,7 @@ router.post('/', (req, res, next) => {
     }
 
     //const created = await User.insert({regName,regMail,regInfo,password:cipher.toString('hex')});
-    const created = await User.insert(insertData);
+    const created = await User.UserMethods.insert(insertData);
     //res.redirect("../login");
     return created;
   })()
@@ -39,7 +39,7 @@ router.post('/', (req, res, next) => {
         });
       })
       .catch(e => {
-        logger.error('创建失败!');
+        logger.error('创建失败!'+ e);
         next(e);
       });
 });
