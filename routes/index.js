@@ -51,6 +51,26 @@ router.get('/signup', (req, res, next) => {
   res.render('signup', {title: '注册页面'});
 });
 
+router.get('/test', (req, res, next) => {
+  res.render('./test/spiderTest', {title: '测试页面'});
+});
+
+const {GetTopTopic} = require('../services/spiderAll/acfun_spider_service');
+router.get('/spiderTest', (req, res, next) => {
+  (async () => {
+    let s = await GetTopTopic();
+    return s;
+  })()
+    .then(r => {
+      res.send(r);
+    })
+    .catch(e => {
+      next(e)
+    });
+});
+
+
+
 module.exports = router;
 
 

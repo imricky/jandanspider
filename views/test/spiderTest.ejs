@@ -1,0 +1,68 @@
+<%- include('../commonComponents/header') %>
+<script src="./javascripts/md5.min.js"></script>
+</head>
+<body>
+
+<div id="app">
+    <el-table :data="tableData" style="width: 50%">
+        <el-table-column prop="link" label="链接" width="180">
+        </el-table-column>
+        <el-table-column prop="title" label="标题" width="180">
+        </el-table-column>
+    </el-table>
+    <el-button @click="loadData">加载数据</el-button>
+</div>
+
+<script>
+  new Vue({
+    el: '#app',
+    data() {
+      return {
+        // tableData: [{
+        //   date: '2016-05-03',
+        //   link: '王小虎',
+        //   title: '上海市普陀区金沙江路 1516 弄'
+        // }]
+        tableData : []
+      }
+    },
+    methods:{
+      loadData(){
+        console.log(1)
+        // this.tableData = [{
+        //     date: '2016-05-03',
+        //     link: '王小虎',
+        //     title: '上海市普陀区金沙江路 1516 弄'
+        //   }
+        // axios({
+        //   method:'get',
+        //   url:'/spiderTest',
+        // })
+        //     .then(function (response) {
+        //       console.log(response.data);
+        //       return response.data;
+        //     });
+      }
+    },
+    // computed:{
+    //   tableData: function () {
+    //     this.loadData();
+    //   }
+    // },
+    created() {
+      console.log(123)
+      const _this = this;
+      //创建的时候就发请求，
+      axios({
+        method:'get',
+        url:'/spiderTest',
+      })
+          .then(function (response) {
+            console.log(response.data);
+            console.log(this)
+            _this.tableData = response.data;
+          });
+    },
+  })
+</script>
+<%- include('../commonComponents/footer') %>
